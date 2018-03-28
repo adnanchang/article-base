@@ -61,7 +61,7 @@
     $(function () {
       // Could also be ['.sort-me', '#also-sort-me']
       $('.sort-me').sortable({ connectWith: '.sort-me, #also-sort-me' });
-      $('#also-sort-me').sortable(); // This one isn't connected back.
+      $('#also-sort-me').sortable({ connectWith: '.sort-me, #also-sort-me' }); // This one isn't connected back.
     });
   </script>
   <!--SCRIPTS-->
