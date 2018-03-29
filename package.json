@@ -43,5 +43,8 @@
     "url": "git://github.com/anonymous node/sails user/article-base.git"
   },
   "author": "anonymous node/sails user",
-  "license": ""
+  "license": "",
+  "devDependencies": {
+    "bower": "^1.8.4"
+  }
 }
