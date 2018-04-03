@@ -49,13 +49,9 @@ module.exports.policies = {
 		// feed : ['isNiceToAnimals', 'hasRabbitFood']
   // }
 
-  '*': ['isAuthorized'],
-
-  'UserController': {
-    'create': true
-  },
-
-  'AuthController': {
+  '*': 'authenticated',
+  // whitelist the auth controller
+	'auth': {
     '*': true
   }
 

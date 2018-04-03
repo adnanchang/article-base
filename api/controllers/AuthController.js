@@ -1,56 +1,55 @@
+/**
+ * AuthController
+ *
+ * @description :: Server-side logic for managing auths
+ * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
+ */
+
+const passport = require('passport');
+
 module.exports = {
-  login: function(req, res) {
-    var email = req.param("email");
-    var password = req.param("password");
+    //Login
+    login: function(req, res){
+        passport.authenticate('local', function(err, user, info){
+            if (err || !user){
+                return res.send({message: info.message, user});
+            }
 
-    verifyParams(res, email, password);
+            req.login(user, function(err){
+                if (err) res.send(err);
+                sails.log('User ' + user.id + 'has logged in');
+                return res.redirect('/');
+            })
+        })(req, res);
+    },
 
-    User.findOne({ email: email })
-      .then(function(user) {
-        if (!user) {
-          return invalidEmailOrPassword(res);
+    //Logout
+    logout: function(req, res) {
+        req.logout();
+        res.redirect('/');
+    },
+
+    //Register
+    register: function(req, res){
+        //TODO: Form validation here
+
+        data = {
+            username: req.body.username,
+            email: req.body.email,
+            password: req.body.password,
+            description: req.body.description
         }
-        signInUser(req, res, password, user);
-      })
-      .catch(function(err) {
-        return invalidEmailOrPassword(res);
-      });
-  }
+
+        User.create(data).exec(function (err, user){
+            if (err) return res.negotiate(err);
+
+            //TODO: Maybe send confirmation email
+            req.login(user, function(err){
+                if (err) res.send(err);
+                sails.log('User ' + user.id + 'has logged in');
+                return res.redirect('/');
+            })
+        })
+    }
 };
 
-function signInUser(req, res, password, user) {
-  User.comparePassword(password, user)
-    .then(function(valid) {
-      if (!valid) {
-        return this.invalidEmailOrPassword();
-      } else {
-        var responseData = {
-          user: user,
-          token: generateToken(user.id)
-        };
-        return ResponseService.json(
-          200,
-          res,
-          "Successfully signed in",
-          responseData
-        );
-      }
-    })
-    .catch(function(err) {
-      return ResponseService.json(403, res, "Forbidden");
-    });
-}
-
-function invalidEmailOrPassword(res) {
-  return ResponseService.json(401, res, "Invalid email or password");
-}
-
-function verifyParams(res, email, password) {
-  if (!email || !password) {
-    return ResponseService.json(401, res, "Email and password required");
-  }
-}
-
-function generateToken(user_id) {
-  return JwtService.issue({ id: user_id });
-}

@@ -5,47 +5,42 @@
  * @docs        :: https://sailsjs.com/docs/concepts/models-and-orm/models
  */
 
-var bcrypt = require("bcrypt");
+var bcrypt = require("bcrypt-nodejs");
 
 module.exports = {
   attributes: {
+    username: {
+      type: 'string',
+      required: true
+    },
+
     email: {
-      type: "email",
-      required: true,
-      unique: true
+      type: 'email',
+      required: true
     },
+
     password: {
-      type: "string",
-      protected: true,
-      required: true,
-      columnName: "encryptedPassword"
+      type: 'string',
+      required: true
     },
-    toJSON: function() {
-      var obj = this.toObject();
-      delete obj.password;
-    }
+
+    description: {
+      type: 'string'
+    },
   },
 
-  beforeCreate: function(values, cb) {
-    bcrypt.hash(values.password, 10, function(err, hash) {
-      if (err) return cb(err);
-      values.password = hash;
-      cb();
-    });
+  customToJSON: function(){
+    return __dirname.omit(this, ['password']);
   },
 
-  comparePassword: function(password, user) {
-    return new Promise(function(resolve, reject) {
-      bcrypt.compare(password, user.password, function(err, match) {
-        if (err) reject(err);
-
-        if (match) {
-          resolve(true);
-        } else {
-          reject(err);
-        }
-      });
-    });
+  beforeCreate: function(user, cb){
+    bcrypt.genSalt(10, function(err, salt){
+      bcrypt.hash(user.password, salt, null, function(err, hash){
+        if (err) return cb(err);
+        user.password = hash;
+        return cb();
+      })
+    })
   },
 
   connection: 'mongoDB'

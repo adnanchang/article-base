@@ -32,10 +32,18 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
-  '/': {
-    view: 'homepage'
+  '/': 'DashboardController.renderIndex',
+  '/explore': {
+    view: 'explore'
   },
-  'post /login': 'AuthController.login',
+
+  //Auth
+  'get /login': {
+    view: 'user/login'
+  },
+  'get /register': {
+    view: 'user/register'
+  },
 
   /***************************************************************************
   *                                                                          *
@@ -46,5 +54,7 @@ module.exports.routes = {
   * for configuration options and examples.                                  *
   *                                                                          *
   ***************************************************************************/
-
+  'post /login': 'AuthController.login',
+  'post /register': 'AuthController.register',
+  '/logout': 'AuthController.logout',
 };

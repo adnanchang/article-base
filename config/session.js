@@ -23,7 +23,6 @@ module.exports.session = {
   ***************************************************************************/
   secret: '6e480c15faece80dacf9b1f349a755d2',
 
-
   /***************************************************************************
   *                                                                          *
   * Set options for the session cookie. See                                  *
@@ -87,8 +86,8 @@ module.exports.session = {
   *                                                                          *
   ***************************************************************************/
 
-  // adapter: 'mongo',
-  // url: 'mongodb://user:password@localhost:27017/dbname', // user, password and port optional
+  adapter: 'mongo',
+  url: 'mongodb://localhost:27017/articlebase', // user, password and port optional
 
   /***************************************************************************
   *                                                                          *
@@ -102,12 +101,12 @@ module.exports.session = {
   *                                                                          *
   ***************************************************************************/
 
-  // collection: 'sessions',
-  // stringify: true,
-  // mongoOptions: {
-  //   server: {
-  //     ssl: true
-  //   }
-  // }
+  collection: 'sessions',
+  stringify: true,
+  mongoOptions: {
+    server: {
+      ssl: false
+    }
+  }
 
 };
