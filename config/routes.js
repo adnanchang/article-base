@@ -32,7 +32,7 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
-  '/': 'DashboardController.renderIndex',
+  '/': 'views/homepage.ejs',
   '/explore': {
     view: 'explore'
   },
